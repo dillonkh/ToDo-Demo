@@ -2,7 +2,7 @@ from django.contrib.auth.models import User, Group
 from rest_framework import viewsets
 from rest_framework import permissions
 from todo.quickstart.models import ToDoItem
-from todo.quickstart.serializers import UserSerializer, GroupSerializer
+from todo.quickstart.serializers import ToDoItemSerializer, UserSerializer, GroupSerializer
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -22,10 +22,10 @@ class GroupViewSet(viewsets.ModelViewSet):
     serializer_class = GroupSerializer
     permission_classes = [permissions.IsAuthenticated]
 
-# class ToDoItemViewSet(viewsets.ModelViewSet):
-#     """
-#     API endpoint that allows ToDoItems to be viewed or edited.
-#     """
-#     queryset = ToDoItem.objects.all()
-#     serializer_class = ToDoItemSerializer
-#     permission_classes = [permissions.IsAuthenticated]
+class ToDoItemViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows ToDoItems to be viewed or edited.
+    """
+    queryset = ToDoItem.objects.all()
+    serializer_class = ToDoItemSerializer
+    permission_classes = [permissions.IsAuthenticated]

@@ -15,14 +15,14 @@ class GroupSerializer(serializers.HyperlinkedModelSerializer):
         model = Group
         fields = ['url', 'name']
 
-# class ToDoItemSerializer(serializers.HyperlinkedModelSerializer):
-#   class Meta:
-#     model = ToDoItem
-#     fields = [
-#       'status',
-#       'todo_by',
-#       'completed_at',
-#       'created_ts',
-#       'updated_ts'
-#     ]
+class ToDoItemSerializer(serializers.ModelSerializer):
+  class Meta:
+    model = ToDoItem
+    fields = [
+      'status',
+      'todo_by',
+      'completed_at',
+      'created_ts',
+      'updated_ts'
+    ]
     
