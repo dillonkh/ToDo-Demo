@@ -29,3 +29,8 @@ class ToDoItemViewSet(viewsets.ModelViewSet):
     queryset = ToDoItem.objects.all()
     serializer_class = ToDoItemSerializer
     permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        queryset = self.queryset
+        query_set = queryset.filter(user_id=self.request.user)
+        return query_set
