@@ -17,6 +17,7 @@ import {
   TableRow,
   TextField,
 } from '@mui/material';
+import { getToDos, updateToDo } from '../api/ToDo';
 
 const ToDoList = (props) => {
   const [toDoList, setToDoList] = useState([]);
@@ -31,49 +32,11 @@ const ToDoList = (props) => {
   ];
 
   useEffect(() => {
-    const tempToDoList = [
-      {
-        url: 'http://127.0.0.1:8000/todo-items/3/',
-        status: 'C',
-        description: 'this is new 1',
-        todo_by: '2022-10-01T16:29:31.355740Z',
-        completed_at: '2022-10-01T16:29:31.355740Z',
-        created_ts: '2022-10-01T16:29:31.355740Z',
-        updated_ts: '2022-10-01T18:08:53.039558Z',
-        user_id: 'http://127.0.0.1:8000/users/1/',
-      },
-      {
-        url: 'http://127.0.0.1:8000/todo-items/3/',
-        status: 'IP',
-        description: 'this is new 2',
-        todo_by: '2022-10-01T16:29:31.355740Z',
-        completed_at: null,
-        created_ts: '2022-10-01T16:29:31.355740Z',
-        updated_ts: '2022-10-01T18:08:53.039558Z',
-        user_id: 'http://127.0.0.1:8000/users/1/',
-      },
-      {
-        url: 'http://127.0.0.1:8000/todo-items/3/',
-        status: 'PD',
-        description: 'this is new 3',
-        todo_by: '2022-10-01T16:29:31.355740Z',
-        completed_at: null,
-        created_ts: '2022-10-01T16:29:31.355740Z',
-        updated_ts: '2022-10-01T18:08:53.039558Z',
-        user_id: 'http://127.0.0.1:8000/users/1/',
-      },
-      {
-        url: 'http://127.0.0.1:8000/todo-items/3/',
-        status: 'TD',
-        description: 'this is new 4',
-        todo_by: '2022-10-01T16:29:31.355740Z',
-        completed_at: null,
-        created_ts: '2022-10-01T16:29:31.355740Z',
-        updated_ts: '2022-10-01T18:08:53.039558Z',
-        user_id: 'http://127.0.0.1:8000/users/1/',
-      },
-    ];
-    setToDoList(tempToDoList);
+    const fetchToDos = async () => {
+      const tempToDoList = await getToDos();
+      setToDoList(tempToDoList);
+    };
+    fetchToDos();
   }, []);
 
   const mapStatus = (status) => {
@@ -98,6 +61,12 @@ const ToDoList = (props) => {
     const day = date.getDay() > 10 ? date.getDay() : `0${date.getDay()}`;
 
     return `${year}-${month}-${day}`;
+  };
+
+  const update = (todo) => {
+    const updatedToDos = updateToDo(todo);
+    setToDoList(updatedToDos);
+    setIsDialogOpen(false);
   };
 
   return (
@@ -215,7 +184,7 @@ const ToDoList = (props) => {
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setIsDialogOpen(false)}>Cancel</Button>
-          <Button onClick={() => setIsDialogOpen(false)}>Update</Button>
+          <Button onClick={() => update(selectedToDo)}>Update</Button>
         </DialogActions>
       </Dialog>
     </>
