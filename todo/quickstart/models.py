@@ -1,5 +1,7 @@
+import django
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from django.contrib.auth.models import User
 
 class ToDoItem(models.Model):
 
@@ -22,10 +24,11 @@ class ToDoItem(models.Model):
         choices=PossibleToDoStatus.choices,
         default=PossibleToDoStatus.TODO,
     )
-    todo_by = models.DateTimeField(_("todo by date"))
-    completed_at = models.DateTimeField(_("completed at date"))
+    todo_by = models.DateTimeField(_("todo by date"), null=True)
+    completed_at = models.DateTimeField(_("completed at date"), null=True)
     created_ts = models.DateTimeField(auto_now_add=True)
     updated_ts = models.DateTimeField(auto_now=True)
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
 
     # EMAIL_FIELD = "email"
     # USERNAME_FIELD = "username"
