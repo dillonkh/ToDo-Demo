@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import dayjs, { Dayjs } from 'dayjs';
 import {
   Button,
   Chip,
@@ -6,7 +7,6 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  Fab,
   MenuItem,
   Paper,
   Select,
@@ -18,8 +18,10 @@ import {
   TableRow,
   TextField,
 } from '@mui/material';
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { addToDo, deleteToDo, getToDos, updateToDo } from '../api/ToDo';
-import AddIcon from '@mui/icons-material/Add';
+import { LocalizationProvider } from '@mui/x-date-pickers';
 
 const ToDoList = (props) => {
   const [toDoList, setToDoList] = useState([]);
@@ -53,13 +55,19 @@ const ToDoList = (props) => {
     return date.toLocaleDateString();
   };
 
-  const getDate = (dateString) => {
+  const getMaterialUIDateString = (dateString) => {
     const date = new Date(dateString);
     const year = date.getFullYear();
-    const month = date.getDay() > 10 ? date.getMonth() : `0${date.getMonth()}`;
-    const day = date.getDay() > 10 ? date.getDay() : `0${date.getDay()}`;
-
+    const month = date.getMonth() > 9 ? date.getMonth() : `0${date.getMonth()}`;
+    const day =
+      date.getDate() > 9 ? date.gegetDatetDay() : `0${date.getDate()}`;
     return `${year}-${month}-${day}`;
+  };
+
+  const convertLocalToUTC = (localDate) => {
+    const date = new Date(localDate);
+    const utc = date.toISOString();
+    return utc;
   };
 
   const fetchToDos = async () => {
@@ -82,6 +90,15 @@ const ToDoList = (props) => {
   const deleteItem = async (url) => {
     await deleteToDo(url);
     fetchToDos();
+  };
+
+  // const [value, setValue] = useState(dayjs('2014-08-18T21:11:54'));
+
+  const handleChange = (newValue) => {
+    setSelectedToDo({
+      ...selectedToDo,
+      completed_at: newValue,
+    });
   };
 
   return (
@@ -108,6 +125,8 @@ const ToDoList = (props) => {
               <TableCell align='right'>Goal Date</TableCell>
               <TableCell align='right'>Completed Date</TableCell>
               <TableCell align='right'>Status</TableCell>
+              <TableCell align='right'></TableCell>
+              <TableCell align='right'></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -184,10 +203,17 @@ const ToDoList = (props) => {
             type='date'
             fullWidth
             variant='standard'
-            value={selectedToDo?.todo_by ? getDate(selectedToDo?.todo_by) : ''}
+            value={
+              selectedToDo?.todo_by
+                ? getMaterialUIDateString(selectedToDo?.todo_by)
+                : ''
+            }
             InputLabelProps={{ shrink: true }}
             onChange={(e) =>
-              setSelectedToDo({ ...selectedToDo, todo_by: e.target.value })
+              setSelectedToDo({
+                ...selectedToDo,
+                todo_by: convertLocalToUTC(e.target.value),
+              })
             }
           />
           <TextField
@@ -199,12 +225,15 @@ const ToDoList = (props) => {
             variant='standard'
             value={
               selectedToDo?.completed_at
-                ? getDate(selectedToDo?.completed_at)
+                ? getMaterialUIDateString(selectedToDo?.completed_at)
                 : ''
             }
             InputLabelProps={{ shrink: true }}
             onChange={(e) =>
-              setSelectedToDo({ ...selectedToDo, completed_at: e.target.value })
+              setSelectedToDo({
+                ...selectedToDo,
+                completed_at: convertLocalToUTC(e.target.value),
+              })
             }
           />
           <Select
