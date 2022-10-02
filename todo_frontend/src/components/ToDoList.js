@@ -6,6 +6,7 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  Fab,
   MenuItem,
   Paper,
   Select,
@@ -17,11 +18,13 @@ import {
   TableRow,
   TextField,
 } from '@mui/material';
-import { getToDos, updateToDo } from '../api/ToDo';
+import { addToDo, deleteToDo, getToDos, updateToDo } from '../api/ToDo';
+import AddIcon from '@mui/icons-material/Add';
 
 const ToDoList = (props) => {
   const [toDoList, setToDoList] = useState([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [selectedToDo, setSelectedToDo] = useState({});
 
   const statusMapList = [
@@ -32,10 +35,6 @@ const ToDoList = (props) => {
   ];
 
   useEffect(() => {
-    const fetchToDos = async () => {
-      const tempToDoList = await getToDos();
-      setToDoList(tempToDoList);
-    };
     fetchToDos();
   }, []);
 
@@ -63,14 +62,44 @@ const ToDoList = (props) => {
     return `${year}-${month}-${day}`;
   };
 
-  const update = (todo) => {
-    const updatedToDos = updateToDo(todo);
-    setToDoList(updatedToDos);
+  const fetchToDos = async () => {
+    const tempToDoList = await getToDos();
+    setToDoList(tempToDoList);
+  };
+
+  const update = async (url, todo) => {
+    await updateToDo(url, todo);
+    fetchToDos();
     setIsDialogOpen(false);
+  };
+
+  const create = async (todo) => {
+    await addToDo(todo);
+    fetchToDos();
+    setIsCreateDialogOpen(false);
+  };
+
+  const deleteItem = async (url) => {
+    await deleteToDo(url);
+    fetchToDos();
   };
 
   return (
     <>
+      <Button
+        variant='text'
+        color='success'
+        size='large'
+        onClick={() => {
+          setSelectedToDo({
+            user_id: 'http://127.0.0.1:8000/users/1/',
+            status: 'TD',
+          });
+          setIsCreateDialogOpen(true);
+        }}
+      >
+        Add New
+      </Button>
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label='simple table'>
           <TableHead>
@@ -91,7 +120,7 @@ const ToDoList = (props) => {
                   {todo.description}
                 </TableCell>
                 <TableCell align='right'>
-                  {getFormattedDateString(todo.todo_by)}
+                  {todo.todo_by ? getFormattedDateString(todo.todo_by) : ''}
                 </TableCell>
                 <TableCell align='right'>
                   {todo.completed_at
@@ -114,6 +143,17 @@ const ToDoList = (props) => {
                     }}
                   >
                     Update
+                  </Button>
+                </TableCell>
+                <TableCell align='right'>
+                  <Button
+                    variant='text'
+                    color='error'
+                    onClick={() => {
+                      deleteItem(todo.url);
+                    }}
+                  >
+                    Delete
                   </Button>
                 </TableCell>
               </TableRow>
@@ -184,7 +224,90 @@ const ToDoList = (props) => {
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setIsDialogOpen(false)}>Cancel</Button>
-          <Button onClick={() => update(selectedToDo)}>Update</Button>
+          <Button
+            onClick={() =>
+              update(selectedToDo.url, {
+                description: selectedToDo.description,
+                status: selectedToDo.status,
+                completed_at: selectedToDo.completed_at,
+                todo_by: selectedToDo.todo_by,
+              })
+            }
+          >
+            Update
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog open={isCreateDialogOpen}>
+        <DialogTitle>Create ToDo</DialogTitle>
+        <DialogContent>
+          <TextField
+            margin='dense'
+            id='description'
+            label='Description'
+            type='text'
+            fullWidth
+            variant='standard'
+            value={selectedToDo?.description}
+            onChange={(e) =>
+              setSelectedToDo({ ...selectedToDo, description: e.target.value })
+            }
+          />
+          <TextField
+            margin='dense'
+            id='todo_by'
+            label='Complete by'
+            type='date'
+            fullWidth
+            variant='standard'
+            value={selectedToDo?.todo_by ? getDate(selectedToDo?.todo_by) : ''}
+            InputLabelProps={{ shrink: true }}
+            onChange={(e) =>
+              setSelectedToDo({ ...selectedToDo, todo_by: e.target.value })
+            }
+          />
+          <TextField
+            margin='dense'
+            id='completed_at'
+            label='Date completed'
+            type='date'
+            fullWidth
+            variant='standard'
+            value={
+              selectedToDo?.completed_at
+                ? getDate(selectedToDo?.completed_at)
+                : ''
+            }
+            InputLabelProps={{ shrink: true }}
+            onChange={(e) =>
+              setSelectedToDo({ ...selectedToDo, completed_at: e.target.value })
+            }
+          />
+          <Select
+            id='status'
+            value={selectedToDo?.status || 'TD'}
+            label='Status'
+            onChange={(e) =>
+              setSelectedToDo({ ...selectedToDo, status: e.target.value })
+            }
+          >
+            {statusMapList.map((status) => (
+              <MenuItem key={status.label} value={status.value}>
+                {status.label}
+              </MenuItem>
+            ))}
+          </Select>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setIsCreateDialogOpen(false)}>Cancel</Button>
+          <Button
+            onClick={() => {
+              create(selectedToDo);
+            }}
+          >
+            Create
+          </Button>
         </DialogActions>
       </Dialog>
     </>
