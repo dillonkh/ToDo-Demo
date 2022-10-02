@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import moment from 'moment';
 import {
   Button,
   Chip,
@@ -19,6 +18,11 @@ import {
   TextField,
 } from '@mui/material';
 import { addToDo, deleteToDo, getToDos, updateToDo } from '../api/ToDo';
+import {
+  convertLocalToUTC,
+  getFormattedDateString,
+  getMaterialUIDateString,
+} from '../utils/date';
 
 const ToDoList = (props) => {
   const [toDoList, setToDoList] = useState([]);
@@ -26,16 +30,16 @@ const ToDoList = (props) => {
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [selectedToDo, setSelectedToDo] = useState({});
 
+  useEffect(() => {
+    fetchToDos();
+  }, []);
+
   const statusMapList = [
     { label: 'In Progress', color: 'warning', value: 'IP' },
     { label: 'Complete', color: 'success', value: 'C' },
     { label: 'To Do', color: 'default', value: 'TD' },
     { label: 'Past Due', color: 'error', value: 'PD' },
   ];
-
-  useEffect(() => {
-    fetchToDos();
-  }, []);
 
   const mapStatus = (status) => {
     const statusMap = {
@@ -45,22 +49,6 @@ const ToDoList = (props) => {
       PD: { label: 'Past Due', color: 'error', value: 'PD' },
     };
     return statusMap[status];
-  };
-
-  const getFormattedDateString = (dateString) => {
-    const date = new Date(dateString);
-    return moment(date).format('MM/DD/YYYY h:mm a');
-  };
-
-  const getMaterialUIDateString = (dateString) => {
-    const date = new Date(dateString);
-    return moment(date).format('YYYY-MM-DDTkk:mm');
-  };
-
-  const convertLocalToUTC = (localDate) => {
-    const date = new Date(localDate);
-    const utc = date.toISOString();
-    return utc;
   };
 
   const fetchToDos = async () => {
