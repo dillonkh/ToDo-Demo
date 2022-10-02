@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import dayjs, { Dayjs } from 'dayjs';
+import moment from 'moment';
 import {
   Button,
   Chip,
@@ -18,10 +18,7 @@ import {
   TableRow,
   TextField,
 } from '@mui/material';
-import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { addToDo, deleteToDo, getToDos, updateToDo } from '../api/ToDo';
-import { LocalizationProvider } from '@mui/x-date-pickers';
 
 const ToDoList = (props) => {
   const [toDoList, setToDoList] = useState([]);
@@ -52,16 +49,12 @@ const ToDoList = (props) => {
 
   const getFormattedDateString = (dateString) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString();
+    return moment(date).format('MM/DD/YYYY h:mm a');
   };
 
   const getMaterialUIDateString = (dateString) => {
     const date = new Date(dateString);
-    const year = date.getFullYear();
-    const month = date.getMonth() > 9 ? date.getMonth() : `0${date.getMonth()}`;
-    const day =
-      date.getDate() > 9 ? date.gegetDatetDay() : `0${date.getDate()}`;
-    return `${year}-${month}-${day}`;
+    return moment(date).format('YYYY-MM-DDTkk:mm');
   };
 
   const convertLocalToUTC = (localDate) => {
@@ -90,15 +83,6 @@ const ToDoList = (props) => {
   const deleteItem = async (url) => {
     await deleteToDo(url);
     fetchToDos();
-  };
-
-  // const [value, setValue] = useState(dayjs('2014-08-18T21:11:54'));
-
-  const handleChange = (newValue) => {
-    setSelectedToDo({
-      ...selectedToDo,
-      completed_at: newValue,
-    });
   };
 
   return (
@@ -200,9 +184,10 @@ const ToDoList = (props) => {
             margin='dense'
             id='todo_by'
             label='Complete by'
-            type='date'
+            type='datetime-local'
             fullWidth
             variant='standard'
+            defaultValue='2017-05-24T10:30'
             value={
               selectedToDo?.todo_by
                 ? getMaterialUIDateString(selectedToDo?.todo_by)
@@ -220,9 +205,10 @@ const ToDoList = (props) => {
             margin='dense'
             id='completed_at'
             label='Date completed'
-            type='date'
+            type='datetime-local'
             fullWidth
             variant='standard'
+            defaultValue='2017-05-24T10:30'
             value={
               selectedToDo?.completed_at
                 ? getMaterialUIDateString(selectedToDo?.completed_at)
@@ -287,10 +273,11 @@ const ToDoList = (props) => {
             margin='dense'
             id='todo_by'
             label='Complete by'
-            type='date'
+            type='datetime-local'
             fullWidth
             variant='standard'
-            value={selectedToDo?.todo_by ? getDate(selectedToDo?.todo_by) : ''}
+            defaultValue='2017-05-24T10:30'
+            value={selectedToDo?.todo_by ? selectedToDo?.todo_by : ''}
             InputLabelProps={{ shrink: true }}
             onChange={(e) =>
               setSelectedToDo({ ...selectedToDo, todo_by: e.target.value })
@@ -300,14 +287,11 @@ const ToDoList = (props) => {
             margin='dense'
             id='completed_at'
             label='Date completed'
-            type='date'
+            type='datetime-local'
             fullWidth
             variant='standard'
-            value={
-              selectedToDo?.completed_at
-                ? getDate(selectedToDo?.completed_at)
-                : ''
-            }
+            defaultValue='2017-05-24T10:30'
+            value={selectedToDo?.completed_at ? selectedToDo?.completed_at : ''}
             InputLabelProps={{ shrink: true }}
             onChange={(e) =>
               setSelectedToDo({ ...selectedToDo, completed_at: e.target.value })
