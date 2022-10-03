@@ -5,9 +5,16 @@ from todo.quickstart.models import ToDoItem
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
+    password = serializers.CharField(
+          min_length=6, write_only=True, required=True)
+    def create(self, options):
+          username = options["username"]
+          password = options["password"]
+          email = options["email"]
+          return User.objects.create_superuser(username=username, password=password, email=email)
     class Meta:
         model = User
-        fields = ['id', 'url', 'username', 'email', 'groups']
+        fields = ['id', 'url', 'username', 'email', 'groups', 'password']
 
 
 class GroupSerializer(serializers.HyperlinkedModelSerializer):

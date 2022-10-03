@@ -1,7 +1,9 @@
-import django
+from pyexpat import model
+from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-from django.contrib.auth.models import User
+from django.contrib.auth.models import (User)
+
 
 class ToDoItem(models.Model):
 
@@ -30,30 +32,7 @@ class ToDoItem(models.Model):
     updated_ts = models.DateTimeField(auto_now=True)
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
 
-    # EMAIL_FIELD = "email"
-    # USERNAME_FIELD = "username"
-    # REQUIRED_FIELDS = ["email"]
-
     class Meta:
         verbose_name = _("task")
         verbose_name_plural = _("tasks")
         abstract = False
-
-    # def clean(self):
-    #     super().clean()
-    #     self.email = self.__class__.objects.normalize_email(self.email)
-
-    # def get_full_name(self):
-    #     """
-    #     Return the first_name plus the last_name, with a space in between.
-    #     """
-    #     full_name = "%s %s" % (self.first_name, self.last_name)
-    #     return full_name.strip()
-
-    # def get_short_name(self):
-    #     """Return the short name for the user."""
-    #     return self.first_name
-
-    # def email_user(self, subject, message, from_email=None, **kwargs):
-    #     """Send an email to this user."""
-    #     send_mail(subject, message, from_email, [self.email], **kwargs)

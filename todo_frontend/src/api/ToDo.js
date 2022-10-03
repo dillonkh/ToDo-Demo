@@ -1,53 +1,74 @@
 import axios from 'axios';
 
-export const getToDos = async () => {
+const BAD_REQUEST = 'ERR_BAD_REQUEST';
+const TODO_URL = 'http://127.0.0.1:8000/todo-items/';
+
+export const getToDos = async (basic_auth) => {
   const config = {
     headers: {
-      'X-CSRFToken': 'YAMgwacCLyrVP7xzxqDHBusBwCwuQh92',
-      Authorization: 'Basic ZGlsbG9ua2g6SG9uZGllTGFuZDk2',
+      Authorization: `Basic ${basic_auth}`,
     },
   };
 
-  const response = await axios.get('http://127.0.0.1:8000/todo-items/', config);
-  return response.data.results;
+  try {
+    const response = await axios.get(TODO_URL, config);
+    return response.data.results;
+  } catch (e) {
+    if (e.code === BAD_REQUEST) {
+      handleLoginRedirect();
+    }
+  }
 };
 
-export const addToDo = async (body) => {
+export const addToDo = async (basic_auth, body) => {
   const config = {
     headers: {
-      'X-CSRFToken': 'YAMgwacCLyrVP7xzxqDHBusBwCwuQh92',
-      Authorization: 'Basic ZGlsbG9ua2g6SG9uZGllTGFuZDk2',
+      Authorization: `Basic ${basic_auth}`,
     },
   };
 
-  const response = await axios.post(
-    'http://127.0.0.1:8000/todo-items/',
-    body,
-    config
-  );
-  return response.data.results;
+  try {
+    const response = await axios.post(TODO_URL, body, config);
+    return response.data.results;
+  } catch (e) {
+    if (e.code === 'ERR_BAD_REQUEST') {
+      handleLoginRedirect();
+    }
+  }
 };
 
-export const updateToDo = async (url, body) => {
+export const updateToDo = async (basic_auth, url, body) => {
   const config = {
     headers: {
-      'X-CSRFToken': 'YAMgwacCLyrVP7xzxqDHBusBwCwuQh92',
-      Authorization: 'Basic ZGlsbG9ua2g6SG9uZGllTGFuZDk2',
+      Authorization: `Basic ${basic_auth}`,
     },
   };
-
-  const response = await axios.patch(url, body, config);
-  return response.data;
+  try {
+    const response = await axios.patch(url, body, config);
+    return response.data;
+  } catch (e) {
+    if (e.code === 'ERR_BAD_REQUEST') {
+      handleLoginRedirect();
+    }
+  }
 };
 
-export const deleteToDo = async (url) => {
+export const deleteToDo = async (basic_auth, url) => {
   const config = {
     headers: {
-      'X-CSRFToken': 'YAMgwacCLyrVP7xzxqDHBusBwCwuQh92',
-      Authorization: 'Basic ZGlsbG9ua2g6SG9uZGllTGFuZDk2',
+      Authorization: `Basic ${basic_auth}`,
     },
   };
+  try {
+    const response = await axios.delete(url, config);
+    return response.data;
+  } catch (e) {
+    if (e.code === 'ERR_BAD_REQUEST') {
+      handleLoginRedirect();
+    }
+  }
+};
 
-  const response = await axios.delete(url, config);
-  return response.data;
+const handleLoginRedirect = () => {
+  window.location.replace('/login');
 };

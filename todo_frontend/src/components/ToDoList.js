@@ -23,15 +23,17 @@ import {
   getFormattedDateString,
   getMaterialUIDateString,
 } from '../utils/date';
+import { useCookies } from 'react-cookie';
 
 const ToDoList = (props) => {
   const [toDoList, setToDoList] = useState([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [selectedToDo, setSelectedToDo] = useState({});
+  const [cookies, setCookie] = useCookies(['basic_auth']);
 
   useEffect(() => {
-    fetchToDos();
+    fetchToDos(cookies.basic_auth);
   }, []);
 
   const statusMapList = [
@@ -51,26 +53,26 @@ const ToDoList = (props) => {
     return statusMap[status];
   };
 
-  const fetchToDos = async () => {
-    const tempToDoList = await getToDos();
+  const fetchToDos = async (basic_auth) => {
+    const tempToDoList = await getToDos(basic_auth);
     setToDoList(tempToDoList);
   };
 
-  const update = async (url, todo) => {
-    await updateToDo(url, todo);
-    fetchToDos();
+  const update = async (basic_auth, url, todo) => {
+    await updateToDo(basic_auth, url, todo);
+    fetchToDos(cookies.basic_auth);
     setIsDialogOpen(false);
   };
 
-  const create = async (todo) => {
-    await addToDo(todo);
-    fetchToDos();
+  const create = async (basic_auth, todo) => {
+    await addToDo(basic_auth, todo);
+    fetchToDos(cookies.basic_auth);
     setIsCreateDialogOpen(false);
   };
 
-  const deleteItem = async (url) => {
-    await deleteToDo(url);
-    fetchToDos();
+  const deleteItem = async (basic_auth, url) => {
+    await deleteToDo(basic_auth, url);
+    fetchToDos(cookies.basic_auth);
   };
 
   return (
@@ -141,7 +143,7 @@ const ToDoList = (props) => {
                     variant='text'
                     color='error'
                     onClick={() => {
-                      deleteItem(todo.url);
+                      deleteItem(cookies.basic_auth, todo.url);
                     }}
                   >
                     Delete
@@ -229,7 +231,7 @@ const ToDoList = (props) => {
           <Button onClick={() => setIsDialogOpen(false)}>Cancel</Button>
           <Button
             onClick={() =>
-              update(selectedToDo.url, {
+              update(cookies.basic_auth, selectedToDo.url, {
                 description: selectedToDo.description,
                 status: selectedToDo.status,
                 completed_at: selectedToDo.completed_at,
@@ -304,7 +306,7 @@ const ToDoList = (props) => {
           <Button onClick={() => setIsCreateDialogOpen(false)}>Cancel</Button>
           <Button
             onClick={() => {
-              create(selectedToDo);
+              create(cookies.basic_auth, selectedToDo);
             }}
           >
             Create
