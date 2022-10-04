@@ -12,8 +12,6 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 
 from pathlib import Path
 
-# from todo.quickstart.models import MyUser
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -28,10 +26,6 @@ SECRET_KEY = 'django-insecure-=1$)w@4e&7ign_(747@!y&h$@%k@046!%o*n%&a2!v#$%uufk#
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
-# CORS_ORIGIN_WHITELIST = [
-#     'http://localhost:3000',
-# ]
 
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',

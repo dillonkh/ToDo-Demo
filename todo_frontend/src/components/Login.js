@@ -1,15 +1,21 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Card, TextField, Box, Typography, Button, Link } from '@mui/material';
 import { useCookies } from 'react-cookie';
+import { getUser } from '../api/User';
 
 const Login = (props) => {
-  // const [toDoList, setToDoList] = useState([]);
-  // const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [cookies, setCookie] = useCookies(['basic_auth']);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
-  useEffect(() => {}, []);
+  const findUser = async () => {
+    const user = await getUser(username);
+    // console.log(user);
+    if (user) {
+      setCookie('user', user, { maxAge: 3600, path: '/' });
+      window.location.replace('/');
+    }
+  };
 
   return (
     <>
@@ -45,7 +51,7 @@ const Login = (props) => {
               onClick={() => {
                 const hash = btoa(`${username}:${password}`);
                 setCookie('basic_auth', hash, { maxAge: 30, path: '/' });
-                window.location.replace('/');
+                findUser(username);
               }}
             >
               Login

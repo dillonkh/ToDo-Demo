@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import {
   Button,
+  Box,
   Chip,
   Dialog,
   DialogActions,
@@ -31,6 +32,8 @@ const ToDoList = (props) => {
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [selectedToDo, setSelectedToDo] = useState({});
   const [cookies, setCookie] = useCookies(['basic_auth']);
+
+  const user = cookies.user;
 
   useEffect(() => {
     fetchToDos(cookies.basic_auth);
@@ -76,14 +79,14 @@ const ToDoList = (props) => {
   };
 
   return (
-    <>
+    <Box marginX={5}>
       <Button
         variant='text'
         color='success'
         size='large'
         onClick={() => {
           setSelectedToDo({
-            user_id: 'http://127.0.0.1:8000/users/1/',
+            user_id: user.url,
             status: 'TD',
           });
           setIsCreateDialogOpen(true);
@@ -313,7 +316,7 @@ const ToDoList = (props) => {
           </Button>
         </DialogActions>
       </Dialog>
-    </>
+    </Box>
   );
 };
 
