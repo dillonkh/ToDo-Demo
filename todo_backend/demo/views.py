@@ -2,8 +2,8 @@ from django.contrib.auth.models import User, Group
 from rest_framework import viewsets
 from rest_framework import permissions
 from rest_framework.response import Response
-from todo.quickstart.models import ToDoItem
-from todo.quickstart.serializers import ToDoItemSerializer, UserSerializer, GroupSerializer
+from todo_backend.demo.models import ToDoItem
+from todo_backend.demo.serializers import ToDoItemSerializer, UserSerializer, GroupSerializer
 from rest_framework.decorators import action
 
 

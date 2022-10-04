@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Card, TextField, Box, Typography, Button, Link } from '@mui/material';
 import { useCookies } from 'react-cookie';
 import { getUser } from '../api/User';
+import { BASIC_AUTH_MAX_AGE } from '../const/cookie';
 
 const Login = (props) => {
   const [cookies, setCookie] = useCookies(['basic_auth']);
@@ -49,7 +50,10 @@ const Login = (props) => {
               sx={{ ml: 'auto' }}
               onClick={() => {
                 const hash = btoa(`${username}:${password}`);
-                setCookie('basic_auth', hash, { maxAge: 30, path: '/' });
+                setCookie('basic_auth', hash, {
+                  maxAge: BASIC_AUTH_MAX_AGE,
+                  path: '/',
+                });
                 findUser(username);
               }}
             >
