@@ -1,6 +1,6 @@
 from django.urls import include, path
 from rest_framework import routers
-from todo.quickstart import views
+from todo_backend.demo import views
 from django.contrib import admin
 
 router = routers.DefaultRouter()

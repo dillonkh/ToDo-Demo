@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Card, TextField, Box, Typography, Button } from '@mui/material';
 import { useCookies } from 'react-cookie';
 import { postUser } from '../api/User';
+import { BASIC_AUTH_MAX_AGE } from '../const/cookie';
 
 const SignUp = (props) => {
   const [cookies, setCookie] = useCookies(['basic_auth']);
@@ -23,7 +24,7 @@ const SignUp = (props) => {
     });
     if (user) {
       const hash = btoa(`${username}:${password}`);
-      setCookie('basic_auth', hash, { maxAge: 30, path: '/' });
+      setCookie('basic_auth', hash, { maxAge: BASIC_AUTH_MAX_AGE, path: '/' });
       setCookie('user', user, { maxAge: 3600, path: '/' });
       window.location.replace('/');
     }
