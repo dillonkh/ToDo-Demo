@@ -35,7 +35,7 @@ I was also pleased to note that migrations work much the same way as Ruby on Rai
 
 ### todo-demo frontend
 
-**NOTE: To run the app you should have npm installed.**
+**NOTE: To run the app you should have npm installed.**   
 **NOTE: To run the front end you should be in the /todo_frontend directory.**
 1. Install dependencies
    ```
