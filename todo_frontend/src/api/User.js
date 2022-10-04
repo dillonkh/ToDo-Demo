@@ -9,6 +9,5 @@ export const getUser = async (username) => {
 
 export const postUser = async (body) => {
   const response = await axios.post(USER_URL, body);
-  console.log(response);
   return response.data;
 };

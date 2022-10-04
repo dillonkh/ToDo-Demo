@@ -14,16 +14,17 @@ const SignUp = (props) => {
   useEffect(() => {}, []);
 
   const signUp = async () => {
-    const res = await postUser({
+    const user = await postUser({
       username,
       password,
       email,
       first_name: fName,
       last_name: lName,
     });
-    if (res) {
+    if (user) {
       const hash = btoa(`${username}:${password}`);
       setCookie('basic_auth', hash, { maxAge: 30, path: '/' });
+      setCookie('user', user, { maxAge: 3600, path: '/' });
       window.location.replace('/');
     }
   };

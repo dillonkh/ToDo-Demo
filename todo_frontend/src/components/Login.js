@@ -10,7 +10,6 @@ const Login = (props) => {
 
   const findUser = async () => {
     const user = await getUser(username);
-    // console.log(user);
     if (user) {
       setCookie('user', user, { maxAge: 3600, path: '/' });
       window.location.replace('/');
