@@ -9,7 +9,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('todo', '0002_alter_todoitem_completed_at_alter_todoitem_todo_by'),
+        ('todo_backend', '0002_alter_todoitem_completed_at_alter_todoitem_todo_by'),
     ]
 
     operations = [
