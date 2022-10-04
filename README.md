@@ -50,6 +50,8 @@ I was also pleased to note that migrations work much the same way as Ruby on Rai
 The easiest way to test is going to be from the browser (Chrome recommended)   
 With both front and back end running locally, navigate to http://localhost:3000/sign-up      
 After signing up, testing the required CRUD functionality should be pretty intuitive. Use the UI to add, delete, modify, and view todos.   
-**Additional tip:** Create a new account, you will notice that the todos are filtered by user 😱
+**Additional tip:** Create a new account, you will notice that the todos are filtered by user 😱   
+Note: If you need to log back in, just go to http://localhost:3000/login    
+Possible routes are `/`, `/login`, and `/sign-up`
 
 
